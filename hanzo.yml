@@ -1,0 +1,17 @@
+# Canonical CI/CD config for hanzoai/node-jsonwebtoken — read by the hanzoai/ci
+# reusable workflow (.hanzo/workflows/cicd.yml) and by platform.hanzo.ai.
+#
+# LIBRARY: JWT sign/verify/decode. No image, no deploy — it ships from a tag.
+#
+# The gate is the mocha suite, and for this package it is not optional. Every
+# CVE this library has ever had was a *verification* bug that compiled
+# perfectly: `alg: none` accepted, an RS256 public key accepted as an HS256
+# shared secret, `algorithms` not enforced, an expired token let through
+# because clockTolerance was applied on the wrong side. test/ asserts each of
+# those refusals by name. A build or type gate is worth nothing here — the
+# whole product is which tokens it rejects.
+#
+# `npm install`, not `npm ci`: this repo ships no package-lock.json.
+test:
+  - name: test
+    run: npm install && npm test
